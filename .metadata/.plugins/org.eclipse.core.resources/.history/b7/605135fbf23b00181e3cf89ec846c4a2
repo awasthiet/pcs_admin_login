@@ -1,0 +1,229 @@
+package Pcs_login;
+
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import utility.CommonFunction;
+import utility.Constant;
+import utility.ExcelUtils;
+import utility.SendMail;
+
+public class adminLogin extends CommonFunction {
+
+	private long emailTime,gmailTime,fbTime,totalTime,start;
+	private String start1, totalTime1;
+	private String regIDResult = "N/A", gmailIDResult = "N/A", facebookIDResult = "N/A";
+	private int iTestCaseRow;
+	//double difsensex, difnifty, difmcx;
+	//	private boolean regR = false,gmailR = false,fbR = false;
+	DecimalFormat df = new DecimalFormat("#");
+	String p, c,path;
+	String screenshotName ;
+
+	@BeforeClass
+	public void setUp() throws Exception {
+		path = Constant.Path+Constant.File_adminLogin;
+		ExcelUtils.setExcelFile(path,Constant.TestSheet);
+		iTestCaseRow = ExcelUtils.getRowUsed();
+		start = System.currentTimeMillis();
+		start1 = "" + new Date(start);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss");
+		Date date = new Date();
+		screenshotName = sdf.format(date);
+	}
+
+	@Test(priority = 1,enabled=true)
+	public void loginViaID() throws Exception {
+		String currentURL = "";
+		long start=0,stop=0;
+		System.setProperty("webdriver.gecko.driver","/home/harshit/Downloads/geckodriver");
+		WebDriver d = new FirefoxDriver();
+		
+		d.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+		d.manage().timeouts().pageLoadTimeout(180, TimeUnit.SECONDS);
+		start=System.currentTimeMillis();
+		try {
+			System.out.println(" ****** Registered Login  is Started ******  \n");
+			p = d.getWindowHandle();
+			d.get(Constant.PCSURL);
+//			if (isElementPresent(d, By.linkText("My Account"))) {
+//				d.findElement(By.linkText("click here to go to economictimes.com")).click();
+//			}
+//			Thread.sleep(15000);
+			currentURL = d.getCurrentUrl();
+			System.out.println("1. URL is Opened : "+ currentURL);
+			if(currentURL.equals(Constant.PCSURL))
+				
+			start  =System.currentTimeMillis();
+//			d.findElement(By.xpath("//a[contains(text(),'SIGN-IN')]")).click();
+//			System.out.println("2. Clicked on the SignIn button");
+//			Thread.sleep(2500);
+//			switchLoginWindow(d, "Sign in to Times Internet Network");
+//			Thread.sleep(2500);
+//			System.out.println("3. Switched to Login Child Window");
+			Email(d).clear();
+			Email(d).sendKeys("sys_admin");
+			System.out.println("4. Enter user ID into textfield");
+			Thread.sleep(2000);
+			
+			d.findElement(By.id("password")).clear();
+			d.findElement(By.id("password")).sendKeys("admin@!1234");
+			System.out.println("6. Enter Password into text field");
+			Thread.sleep(3000);
+			d.findElement(By.xpath("//INPUT[@class='btn btn-primary']")).click();
+			Thread.sleep(5000);
+			System.out.println("7. Clicked on the SignIn button");
+			d.switchTo().window(p);
+			Thread.sleep(5000);
+			
+			if(currentURL.equals(Constant.PCSURL))
+			{
+				String s =d.findElement(By.xpath("(//A[@class='selected-backoffice dropdown-toggle'])[5]")).getText();
+				//hoverMouse(d,d.findElement(By.xpath("//*[@id='netspidersosh']//div[@class='flr signIn']//img")));
+				if (s== "Account") {
+					regIDResult = "PASS";
+					System.out.println("9. Registered User is Passed");
+				} else {
+					stop=System.currentTimeMillis();
+					regIDResult = "FAIL";
+					System.out.println("9. Registered user is Failed");
+					ExcelUtils.takeScreenshot(d, "Registered_Email_" + screenshotName);
+					System.out.println("10. Screenshot is captured : Registered_Email_" + screenshotName);
+				}
+			}
+			
+			
+			d.quit();
+		} catch (TimeoutException e) {
+			regIDResult = "Something went wrong!!";
+			//regR=true;
+			System.out.println("9. Registered Email is Failed due to PageTimeOutException : "+e.getMessage());
+			ExcelUtils.takeScreenshot(d, "Registered_Email_PageTimeOutException_" + screenshotName);
+			System.out.println("10. Screenshot is captured : Registered_Email_PageTimeOutException_" + screenshotName);
+			d.quit();
+		} catch (NoSuchElementException e)
+		{
+			regIDResult = "FAIL";
+			System.out.println("9. Registered Email is Failed due to Exception : "+e.getMessage());
+			ExcelUtils.takeScreenshot(d, "Registered_Email_Exception_" + screenshotName);
+			System.out.println("10. Screenshot is captured : Registered_Email_Exception_" + screenshotName);
+			d.quit();
+		}
+		stop=System.currentTimeMillis();
+		long emailTime1 = stop-start;
+		emailTime = TimeUnit.MILLISECONDS.toSeconds(emailTime1);
+		System.out.println("11. Time Taken for Registered Email : " + emailTime);
+	}
+
+	
+
+	public boolean isElementPresent(WebDriver d, By by) {
+		d.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+		try {
+			d.findElement(by);
+			d.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+			return true;
+		} catch (NoSuchElementException e) {
+			d.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+			return false;
+		}
+	}
+
+	@AfterClass
+	public void tearDown() throws Exception {
+		totalTime = emailTime+gmailTime+fbTime;
+		totalTime1 = String.valueOf(totalTime);
+		System.out.println("Total Time : " + totalTime);
+		try {
+			/*			if (!regIDResult.equalsIgnoreCase("PASS") || regIDResult.equals("N/A")){
+				regIDResult = "FAIL";
+			}
+			if (!gmailIDResult.equalsIgnoreCase("PASS") || gmailIDResult.equals("N/A")){
+				gmailIDResult = "FAIL";
+			}
+			if (!facebookIDResult.equalsIgnoreCase("PASS")||facebookIDResult.equals("N/A")) {
+				facebookIDResult = "FAIL";
+			} 
+			if(regR)
+			{
+				regIDResult = "Something went wrong!!";
+			}
+			if(gmailR)
+			{
+				gmailIDResult = "Something went wrong!!";
+			}
+			if(fbR)
+			{
+				facebookIDResult = "Something went wrong!!";
+			}*/
+			System.out.println("1: " + regIDResult + " 2 " + gmailIDResult + " 3 " + facebookIDResult);			 
+			ExcelUtils.setCellDatafor(path,iTestCaseRow,Constant.TIME,start1,totalTime1,regIDResult,gmailIDResult,facebookIDResult);
+		} catch (Exception e) {
+			
+			System.out.println("1: " + regIDResult + " 2 " + gmailIDResult + " 3 " + facebookIDResult);			 
+			ExcelUtils.setCellDatafor(path,iTestCaseRow,Constant.TIME,start1,totalTime1,regIDResult,gmailIDResult,facebookIDResult);
+			System.out.println(e.getMessage());
+			// TODO: handle exception
+		}
+
+	}
+
+	public WebElement Email(WebDriver d) {
+		return d.findElement(By.id("username"));
+	}
+
+//	@AfterTest
+//	public void sendMail() throws IOException {
+//		SendMail obj = new SendMail();
+//		if(regIDResult.equalsIgnoreCase("FAIL")||gmailIDResult.equalsIgnoreCase("FAIL")||facebookIDResult.equalsIgnoreCase("FAIL"))
+//		{
+//			obj.sentReportMail("ET Login Report for " + start1,
+//					"<html>" + "<body> " + "<font face='Tahoma'size='2'> "
+//							+ "<h3 align='center' ><font color='#000000' face='Tahoma' size='3'>ET Login Report</font></h3> "
+//							+ "<table border='2' width='100%' height='47'> " + "<tr> "
+//							+ "<td width='15%' bgcolor='#FFA07A'align='center'><b><font color='#000000' face='Tahoma' size='2'>Total Turn Arround Time(seconds)</font></b></td> "
+//							+ "<td width='15%' bgcolor='#FFA07A'align='center'><b><font color='#000000' face='Tahoma' size='2'>Registered Email ID </font></b></td> "
+//							+ "<td width='15%' bgcolor='#FFA07A'align='center'><b><font color='#000000' face='Tahoma' size='2'>Gmail ID</font></b></td> "
+//							+ "<td width='15%' bgcolor='#FFA07A'align='center'><b><font color='#000000' face='Tahoma' size='2'>Facebook ID </font></b>"
+//							+ "</tr>" + "<tr>"
+//							+ "<td width='15%' bgcolor='#FFE4E1'align='center'><b><font color='#000000' face='Tahoma' size='2'>"
+//							+ totalTime1 + "</font></b></td> "
+//							+ "<td width='15%' bgcolor='#FFE4E1'align='center'><b><font color='#000000' face='Tahoma' size='2'>"
+//							+ regIDResult + "</font></b></td> "
+//							+ "<td width='15%' bgcolor='#FFE4E1'align='center'><b><font color='#000000' face='Tahoma' size='2'>"
+//							+ gmailIDResult + " </font></b></td> "
+//							+ "<td width='15%' bgcolor='#FFE4E1'align='center'><b><font color='#000000' face='Tahoma' size='2'>"
+//							+ facebookIDResult + "</font></b></td>" + "</tr>" + "</body>" + "</html>");
+//		}
+//
+//		obj.sentReportMailQA("QA Login Report " + start1,
+//				"<html>" + "<body> " + "<font face='Tahoma'size='2'> "
+//						+ "<h3 align='center' ><font color='#000000' face='Tahoma' size='3'>ET Login Report</font></h3> "
+//						+ "<table border='2' width='100%' height='47'> " + "<tr> "
+//						+ "<td width='15%' bgcolor='#FFA07A'align='center'><b><font color='#000000' face='Tahoma' size='2'>Total Turn Arround Time(seconds)</font></b></td> "
+//						+ "<td width='15%' bgcolor='#FFA07A'align='center'><b><font color='#000000' face='Tahoma' size='2'>Registered Email ID </font></b></td> "
+//						+ "<td width='15%' bgcolor='#FFA07A'align='center'><b><font color='#000000' face='Tahoma' size='2'>Gmail ID</font></b></td> "
+//						+ "<td width='15%' bgcolor='#FFA07A'align='center'><b><font color='#000000' face='Tahoma' size='2'>Facebook ID </font></b>"
+//						+ "</tr>" + "<tr>"
+//						+ "<td width='15%' bgcolor='#FFE4E1'align='center'><b><font color='#000000' face='Tahoma' size='2'>"
+//						+ totalTime1 + "</font></b></td> "
+//						+ "<td width='15%' bgcolor='#FFE4E1'align='center'><b><font color='#000000' face='Tahoma' size='2'>"
+//						+ regIDResult + "</font></b></td> "
+//						+ "<td width='15%' bgcolor='#FFE4E1'align='center'><b><font color='#000000' face='Tahoma' size='2'>"
+//						+ gmailIDResult + " </font></b></td> "
+//						+ "<td width='15%' bgcolor='#FFE4E1'align='center'><b><font color='#000000' face='Tahoma' size='2'>"
+//						+ facebookIDResult + "</font></b></td>" + "</tr>" + "</body>" + "</html>");
+//	}
+}

@@ -1,0 +1,45 @@
+package utility;
+
+public class Constant extends CommonFunction
+{
+	public static final String PCSURL = "http://qa-pcs-admin.hcah.in";
+	public static final String PortfolioURL = "https://etportfolio.indiatimes.com/Login.htm";
+	public static final String ETNewURL = "http://economictimes.indiatimes.com/home.cms";
+	public static final String ETNewURLIndex = "http://economictimes.indiatimes.com/index.cms";
+	public static final String ETMCXURL="http://economictimes.indiatimes.com/commoditysummary/symbol-GOLD.cms";
+	public static final String BSEURL="http://www.bseindia.com/sensexview/indexview_new.aspx?index_Code=16&iname=BSE30";
+	public static final String NSEURL="http://www.nseindia.com/";
+//	public static final String MCXURL="http://www.mcxindia.com/SitePages/realtimedata.aspx";
+	public static final String MCXURL="https://www.mcxindia.com/market-data/market-watch";
+	public static final String MFURL="http://economictimes.indiatimes.com/mutual-funds";
+	public static final String VSURL="https://www.valueresearchonline.com/";
+	public static final String companyUrl = "http://economictimes.indiatimes.com/indices/sensex_30_companies.cms";
+	public static final String niftycompanyUrl = "http://economictimes.indiatimes.com/indices/nifty_50_companies.cms";
+	public static final String headlinepageUrl = "http://economictimes.indiatimes.com/headlines.cms";
+	public static final String Username = "testuser_1";
+	public static final String Password = "Test@123";
+	public static final String Path = getPath()+"//files//";
+	public static final String File_Marketdata = "marketdata.xlsx";
+	public static final String File_ETAllLogin = "ETAllLogin.xlsx";
+	public static final String File_adminLogin = "adminLogin.xlsx";
+	public static final String File_PortfolioLogin = "PortfolioLogin.xlsx";
+	public static final String File_LiveTv = "LiveTv.xlsx";
+	public static final String File_MFdatasheet = "MFdatasheet.xlsx";
+	public static final String File_Companydatasheet = "Companydata.xlsx";
+	public static final String File_DuplicateCompanydatasheet = "DuplicateCompanyData.xlsx";
+	public static final String File_ETMainHomePageSection = "ETMainHomePageSection.xlsx";
+	public static final String File_ETMainMorningBriefFeed = "ETMainMorningBriefFeed.xlsx";
+	public static final String File_ETMainHeadLinePage = "ETMainHeadLinePage.xlsx";
+	public static final String File_ETNewHomePageAllLogin = "ETNewHomePageAllLogin.xlsx";
+	public static final String File_PathArtical = Path+"\\ETMainALLArticleListingPagesDataChecks.xlsx";
+	public static final String File_ETMainALLArticle= "ETMainALLArticleListingPagesDataChecks.xlsx";
+	public static final String File_NewHomePageFooterURL= "NewHomePageFooterURL.xlsx";
+	public static final String File_NewHomePageHeaderURL= "NewHomePageHeaderURL.xlsx";
+	public static final String TestSheet ="Sheet1";
+	public static final String NewTestSheet ="Sheet2";
+	public static final String PathScreenShot=getPath()+"\\ScreenShots\\";
+	public static final String PathVideoScreenShot=getPath()+"\\videoScreenshot\\";
+	public static final String PathAudioFile=getPath()+"\\audio\\";
+	public static final int TIME = 0;	
+	public static final int TAT =1 ;
+}

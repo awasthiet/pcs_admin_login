@@ -1,0 +1,11 @@
+package test;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+public class demoo {
+
+	WebDriver driver = new FirefoxDriver();
+	String url = "www.google.com";
+
+}
